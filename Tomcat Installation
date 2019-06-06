@@ -1,0 +1,64 @@
+Tomcat installation:
+
+Prerequisites
+EC2 instance with Java v1.8.x installed please:
+yum install java-1.8.0-openjdk
+yum install java-1.8.0-openjdk-devel
+java -version or java --version
+
+
+ Tomcat Download:   https://tomcat.apache.org/download-80.cgi onto /opt on EC2 instance
+OR
+
+cd /opt
+  wget http://mirrors.fibergrid.in/apache/tomcat/tomcat-8/v8.5.35/bin/apache-tomcat-8.5.35.tar.gz
+  tar -xvzf /opt/apache-tomcat-8.5.35.tar.gz
+
+
+give excute permissions to startup.sh and shutdown.sh which are under bin.
+chmod +x /opt/apache-tomcat-8.5.35/bin/startup.sh shutdown.sh
+
+create link files for tomcat startup.sh and shutdown.sh   (so that you cna start/stop  the script from anywhere)
+
+  ln -s /opt/apache-tomcat-8.5.35/bin/startup.sh /usr/local/bin/tomcatup
+  ln -s /opt/apache-tomcat-8.5.35/bin/shutdown.sh /usr/local/bin/tomcatdown
+
+http://<Public_IP>:8080 (try this from your browser to see if tomcat page gets opened)
+tomcat and Jenkins runs on ports number 8080. Hence lets change tomcat port number to 8090. Change port number 
+in conf/server.xml file under tomcat home (its good to have a separate VM for tomcat)
+
+cd /opt/apache-tomcat-8.5.35/conf
+# update port number in the "connecter port" field in server.xml
+# restart tomcat after configuration update
+tomcatdown
+tomcatup
+
+ ps -ef |grep tomcat   (check if tomcat is up and running)
+
+http://<Public_IP>:8090  (if we took 8090 instead of 8080)
+
+application is accessible on port 8090. but tomcat application doesnt allow to login from browser. 
+changing a default parameter in context.xml does address this issue
+
+find / -name context.xml   (we ahve to search for this file adn make some changes)
+we have to comment here a parameter starting with "Valve ClassName"
+
+<!--  <Valve className="org.apache.catalina.valves.RemoteAddrValve"
+         allow="127\.\d+\.\d+\.\d+|::1|0:0:0:0:0:0:0:1" /> -->
+
+
+After that we have to use some credentials to get inside the tomcat page:
+
+find / -name "tomcat-users.xml"
+add below details in tomcat-users.xml
+
+        <role rolename="manager-gui"/>
+        <role rolename="manager-script"/>
+        <role rolename="manager-jmx"/>
+        <role rolename="manager-status"/>
+        <user username="admin" password="admin" roles="manager-gui,manager-script,manager-jmx,manager-status"/>
+        <user username="deployer" password="deployer" roles="manager-script"/>
+        <user username="TomcatAdmin" password="XXXXXXXX" roles="manager-gui"/>
+
+Restart daemons and try loggin in again and login to the application.
+
