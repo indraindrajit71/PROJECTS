@@ -47,6 +47,6 @@ we can craete new job adn use settings to copy from the latter job:
 Add post build steps:
 
 
-Execute job and you should be able to seen build has been deployed on Tomcat server.
+Execute job and you  should be able to seen build has been deployed on Tomcat server.
 try accesing the page via :
 publicIPof tomcatinstance:8090/webapp
