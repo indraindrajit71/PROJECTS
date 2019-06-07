@@ -4,7 +4,7 @@ here we will use GIT+Jenkins+Maven+Tomcat together and configure it as CI-CD flo
 Login to Jenkins console
 Create Jenkins job, Fill the following details,
 
-source code management:
+source code management::
 Mention the repo URL and the master details in it.
 
 IN BUILD: select Maven version  (invoke top level maven targets)
