@@ -1,0 +1,52 @@
+Setup:
+ansible+git+EC2+Maven
+
+
+Install "publish Over SSH" plugin and restart jenkisn if required: (Manage Jenkins > Manage Plugins > Available > Publish over SSH)
+
+Enable connection between Ansible and Jenkins:
+
+for best practice:
+create a generic user on both the ansible instance and tomcat instance:
+
+useradd -m -d /home/ansibleuser ansibleuser
+
+set password for that user:
+passwd ansibleuser
+
+
+Manage Jenkins > Configure System > Publish Over SSH > SSH Servers
+SSH Servers:
+Hostname:<ServerIP>
+username: XXXXXXX
+password: *******
+
+Test the connection "Test Connection"
+
+login to ansible VM:
+create a folder in /opt/playbooks once logged in via "ansibleuser"
+
+create a yml file which will copy the stuffs to several tomcat instances:
+
+---
+ - hosts: tomcat
+   become: true
+   tasks:
+           - name: copy war file onto tomcat instance
+             copy:
+                     src: /opt/playbooks/target/webapp.war
+                     dest: /opt/apache-tomcat-8.5.40/webapps
+
+PS: add the internal IP's of the tomat instances inside /etc/ansible/hosts adn make sure that few adhoc comamnds get executed:
+ansible -m ping all
+
+
+Jenkins Job create:
+we can craete new job adn use settings to copy from the latter job:
+
+Add post build steps:
+
+
+Execute job and you should be able to seen build has been deployed on Tomcat server.
+try accesing the page via :
+publicIPof tomcatinstance:8090/webapp
