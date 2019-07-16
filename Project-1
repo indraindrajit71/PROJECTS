@@ -32,7 +32,7 @@ Description: Tomcat user to deploy on tomcat server
 Modify the same job which created:
 Post Steps
 Deploy war/ear to container
-WAR/EAR files : **/*.war
+WAR/EAR files : **/*.war   --------- in workspace dir wherever it finds war file ext..it will take that
 Containers : Tomcat 8.x
 Credentials: Tomcat_user (which created in above step)
 Tomcat URL : http://<PUBLIC_IP>:<PORT_NO>
