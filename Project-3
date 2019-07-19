@@ -1,0 +1,14 @@
+Use the same feature for Docker instead of EC2 instances:
+
+
+Prerequiste::
+ an EC2 instance for Docker host
+
+Docker installations::
+yum install docker
+service docker start
+
+new user for Docker management and add him to Docker (default) group::
+useradd dockeradmin
+passwd dockeradmin
+usermod -aG docker dockeradmin
