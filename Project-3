@@ -2,13 +2,59 @@ Use the same feature for Docker instead of EC2 instances:
 
 
 Prerequiste::
- an EC2 instance for Docker host
+ an EC2 instance for Docker host (ubuntu preferred)
 
 Docker installations::
 yum install docker
 service docker start
 
+
+or:
+apt install apt-transport-https ca-certificates curl software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
+apt update
+apt-cache policy docker-ce
+ apt install docker-ce
+
 new user for Docker management and add him to Docker (default) group::
 useradd dockeradmin
 passwd dockeradmin
 usermod -aG docker dockeradmin
+
+Please make sure that in Jenkins VM,the ssh is allowed via using password..
+
+login to docker host now and create a docker file now:
+From tomcat:8-jre8
+
+# copy war file on to container
+COPY ./target/webapp.war /usr/local/tomcat/webapps
+
+
+Login to Jenkins console and add Docker server to execute commands from Jenkins:
+Manage Jenkins --> Configure system --> Publish over SSH --> add Docker server and credentials
+
+Create Jenkins job:
+after adding all git details
+send files or execute commands over SSH Name: docker_host
+
+source files: target/*.war
+remove prefix : target   (this will remove the target name while editing the war file)
+remote directory : //opt//docker   
+exec command: docker stop jenkins_docker;docker rm -f jenkins_docker;docker image rm -f jenkins_docker;cd /opt/docker;docker build -t jenkins_docker .
+
+send files or execute commands over SSH  (its always advised to add 2 times as commamnds in single can fail)
+Name: docker_host
+exec command : docker run -d --name jenkins_docker -p 8090:8080 jenkins_docker
+save the job
+
+try accessing if tomcat page gets opened:
+public IP:8090
+later for the application : pubIP:8090/webapp
+
+
+thanks
+All the best !!
+
+
+
