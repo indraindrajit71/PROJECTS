@@ -44,6 +44,21 @@ ansible -m ping all
 Jenkins Job create:
 we can craete new job adn use settings to copy from the latter job:
 
+
+goto : post steps:
+send files or publish over ssh (this will come if plugin was installed)
+
+transfer:
+source file: webapp/target/*.war
+remote dir : //opt//playbooks
+
+add 1 more publish over ssh:
+
+exec command we need to add and leave other as blank:
+ansible-playbook /opt/playbook/copy.yml
+
+
+
 Add post build steps:
 
 
