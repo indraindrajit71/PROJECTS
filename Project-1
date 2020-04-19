@@ -35,7 +35,7 @@ Deploy war/ear to container
 WAR/EAR files : **/*.war   --------- in workspace dir wherever it finds war file ext..it will take that
 Containers : Tomcat 8.x
 Credentials: Tomcat_user (which created in above step)
-Tomcat URL : http://<PUBLIC_IP>:<PORT_NO>
+Tomcat URL : http://<PUBLIC_IP>:<PORT_NO>/webapp
 
 Save and run the job now.
 
